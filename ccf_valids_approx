@@ -1,0 +1,41 @@
+ccf_valids_approx <- function(x, y, lag.max = 2, method = “pearson”){
+	n <- min(length(x), length(y))
+	x <- x[1:n]
+	y <- y[1:n]
+
+	lags <- -lag.max:lag.max
+	ccf_vals <- numeric(length(lags))
+	n_pairs <- integer(length(lags))
+
+	limit_lower <- numeric(length(lags))
+	limit_higher <- numeric(length(lags))
+
+	for (i in 1:length(lags)){
+		k <- lags[i]
+		if (k >= 0){
+			t1 <- (1 + k):n
+			t2 <- 1:(n – k)
+		}
+		else {
+			kk <- -k
+			t1 <- 1:(n – kk)
+			t2 <- (1 + kk):n
+		}
+
+		valid <- complete.cases(x[t1], y[t2])
+		r <- cor(x[t1][valid], y[t2][valid], method = method)
+		np <- sum(valid)
+		ccf_vals[i] <- r
+		n_pairs[i]  <- np
+
+		if (!is.na(r) && np > 1) {
+			limit_lower[i] <- -2/sqrt(np)
+			limit_higher[i] <- 2/sqrt(np)
+		}
+		else {
+			limit_lower[i] <- NA
+			limit_higher[i] <- NA
+		}
+	}
+	data.frame(lag = lags, ccf = ccf_vals, n_pairs = n_pairs, limit_lower = limit_lower, limit_higher = limit_higher)
+}
