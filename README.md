@@ -1,6 +1,8 @@
 # Description
 This code defines an R function that computes cross-correlation values for lags from −2 to 2, using only valid (non-NA) observations at each lag. Cross-correlations are calculated using Pearson’s method. The function also calculates approximate confidence intervals separately for each lag based on the number of valid observations available.
 
+This custom function was developed for R 4.2.3.
+
 # Usage
 Copy the code, paste it into an R session, and run it. The function ccf_valids_approx() can then be called to compute cross-correlations.
 
